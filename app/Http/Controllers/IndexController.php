@@ -10,7 +10,7 @@ use App\Category;
 class IndexController extends Controller
 {
    public function Index(){
-   	$products=Product::orderBy('id', 'desc')->get();
+   	$products=Product::orderBy('id', 'desc')->where(['status'=>1])->get();
 
    	// $categories_menu = "";
 

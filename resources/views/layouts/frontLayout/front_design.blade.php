@@ -13,7 +13,8 @@
     <link href="{{asset('css/frontend_css/animate.css')}}" rel="stylesheet">
 	<link href="{{asset('css/frontend_css/main.css')}}" rel="stylesheet">
 	<link href="{{asset('css/frontend_css/responsive.css')}}" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="{{asset('css/frontend_css/easyzoom.css')}}" rel="stylesheet">
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> --}}
     <!--[if lt IE 9]>
     <script src="js/html5shiv.js"></script>
     <script src="js/respond.min.js"></script>
@@ -41,5 +42,38 @@
 	<script src="{{asset('js/frontend_js/price-range.js')}}"></script>
     <script src="{{asset('js/frontend_js/jquery.prettyPhoto.js')}}"></script>
     <script src="{{asset('js/frontend_js/main.js')}}"></script>
+    <script src="{{asset('js/frontend_js/easyzoom.js')}}"></script>
+    <script>
+    // Instantiate EasyZoom instances
+    var $easyzoom = $('.easyzoom').easyZoom();
+
+    // Setup thumbnails example
+    var api1 = $easyzoom.filter('.easyzoom--with-thumbnails').data('easyZoom');
+
+    $('.thumbnails').on('click', 'a', function(e) {
+        var $this = $(this);
+
+        e.preventDefault();
+
+        // Use EasyZoom's `swap` method
+        api1.swap($this.data('standard'), $this.attr('href'));
+    });
+
+    // Setup toggles example
+    var api2 = $easyzoom.filter('.easyzoom--with-toggle').data('easyZoom');
+
+    $('.toggle').on('click', function() {
+        var $this = $(this);
+
+        if ($this.data("active") === true) {
+            $this.text("Switch on").data("active", false);
+            api2.teardown();
+        } else {
+            $this.text("Switch off").data("active", true);
+            api2._init();
+        }
+    });
+    </script>
+    
 </body>
 </html>

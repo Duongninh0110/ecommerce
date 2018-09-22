@@ -74,6 +74,14 @@
                 </div>
 
                 <div class="control-group">
+                  <label class="control-label">Material & Care</label>
+                  <div class="controls">
+                    <textarea type="text" name="care" id="care"></textarea> 
+                  </div>
+                </div>
+                
+
+                <div class="control-group">
                   <label class="control-label">Product Price</label>
                   <div class="controls">
                     <input type="text" name="price" id="price" />
@@ -95,6 +103,14 @@
                     <textarea type="text" name="description" id="description"></textarea> 
                   </div>
                 </div>
+
+               <div class="control-group">
+                  <label class="control-label">Enable</label>
+                  <div class="controls">
+                    <input type="checkbox" name="status" id="status" value="1" />
+                  </div>
+                </div>
+
 
                 
 

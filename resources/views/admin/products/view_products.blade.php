@@ -38,8 +38,7 @@
 
                   <th>Product Name</th>
                   <th>Product Code</th>
-                  <th>Product Color</th>
-                  <th>Description</th>
+                  <th>Product Color</th>                  
                   <th>Price</th>
                   <th>Images</th>
                   <th>Actions</th>
@@ -56,8 +55,7 @@
 
                   <td style="width: 100px">{{$product->product_name}}</td>
                   <td>{{$product->product_code}}</td>
-                  <td>{{$product->product_color}}</td>
-                  <td style="width: 200px">{{$product->description}}</td>
+                  <td>{{$product->product_color}}</td>                  
                   <td>{{$product->price}}</td>
                   
                   <td> 
@@ -66,11 +64,12 @@
                  
                   @endif
                   <td class="center">
-                    <a href="#myModal{{$product->id}}" data-toggle="modal" class="btn btn-success btn-mini">View</a> 
-                    <a href="{{url('admin/edit-product/'.$product->id)}}" class="btn btn-primary btn-mini">Edit</a> 
-                    <a href="{{url('admin/add-attributes/'.$product->id)}}" class="btn btn-success btn-mini">Add</a> 
+                    <a href="#myModal{{$product->id}}" data-toggle="modal" class="btn btn-success btn-mini" title="view">View</a> 
+                    <a href="{{url('admin/edit-product/'.$product->id)}}" class="btn btn-primary btn-mini" title="edit">Edit</a> 
+                    <a href="{{url('admin/add-attributes/'.$product->id)}}" class="btn btn-success btn-mini" title="add attributes">Add</a> 
+                    <a href="{{url('admin/add-images/'.$product->id)}}" class="btn btn-info btn-mini" title="add images">Add</a> 
                     <a 
-                    rel="{{$product->id}}" rel1="delete-product"  href="javascript:" class="btn btn-danger btn-mini deleteRecord">Delete</a></td>
+                    rel="{{$product->id}}" rel1="delete-product"  href="javascript:" class="btn btn-danger btn-mini deleteRecord" title="delete">Delete</a></td>
                 </tr>
 
                 

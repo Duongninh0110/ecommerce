@@ -74,6 +74,13 @@
                 </div>
 
                 <div class="control-group">
+                  <label class="control-label">Material & Care</label>
+                  <div class="controls">
+                    <textarea type="text" name="care" id="care">{{$productDetails->care}}</textarea> 
+                  </div>
+                </div>
+
+                <div class="control-group">
                   <label class="control-label">Product Price</label>
                   <div class="controls">
                     <input type="text" name="price" id="price" value="{{$productDetails->price}}" />
@@ -102,6 +109,14 @@
                     <textarea type="text" name="description" id="description">{{$productDetails->description}}</textarea> 
                   </div>
                 </div>
+
+                <div class="control-group">
+                  <label class="control-label">Enable</label>
+                  <div class="controls">
+                    <input type="checkbox" name="status" id="status" @if ($productDetails->status=="1") checked @endif value="1" />
+                  </div>
+                </div>
+
 
                 
 
