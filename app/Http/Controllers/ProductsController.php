@@ -14,6 +14,7 @@ use App\Product;
 use App\products_attribute;
 use App\products_image;
 use App\Cart;
+use App\Coupon;
 class ProductsController extends Controller
 {
     public function addProduct(Request $request){
@@ -516,7 +517,8 @@ class ProductsController extends Controller
 
     public function addtocart(Request $request){
 
-       
+        Session::forget('CouponAmount');
+        Session::forget('CouponCode');
 
         $data = $request->all();
         // echo "<pre>"; print_r($data); die;
@@ -525,26 +527,164 @@ class ProductsController extends Controller
             $data['user_email'] = '';
         }
 
-        if(empty($data['session_id'])){
-            $data['session_id'] = '';
+        // if(empty($data['session_id'])){
+        //     $data['session_id'] = '';
+        // }
+
+        $session_id=Session::get('session_id');
+        if(empty($session_id)){
+
+        $session_id = str_random(40);
+        Session::put('session_id', $session_id);
         }
+
+
+
 
         // dd($data['size']);
 
         $size = explode("-", $data['size']);
 
+        $productSKU = products_attribute::where(['product_id'=>$data['product_id'],'size'=>$size[1]])->select('sku')->first();
+
+        $countProducts = Cart::where(['product_id'=>$data['product_id'],'product_code'=>$data['product_code'],'size'=>$size[1],'session_id'=>$session_id])->count();
+        if ($countProducts>1){
+            return redirect()->back()->with('flash_message_error','The Product already exist in cart');die;
+        } 
+
         $cart = new Cart;
         $cart->product_id = $data['product_id'];        
         $cart->product_name = $data['product_name'];
-        $cart->product_code = $data['product_code'];
+        $cart->product_code = $productSKU->sku;
         $cart->product_color = $data['product_color'];
         $cart->price = $data['price'];
         $cart->quantity = $data['quantity'];
         $cart->size = $size[1];
-        $cart->session_id = $data['session_id'];
+        $cart->session_id = $session_id;
         $cart->user_email = $data['user_email'];
         $cart->save();
+
+        return redirect('cart')->with('flash_message_success', 'The Product is successfully added to cart!'); 
+    }
+
+    public function cart(){
+
         
+        $session_id = Session('session_id');
+        // dd($session_id);
+        $userCarts = Cart::where(['session_id'=>$session_id])->get();
+
+        $userCarts = json_decode(json_encode($userCarts));
+
+
+
+        foreach ($userCarts as $key=>$userCart){
+
+            // $userCarts[$key]->image='';
+
+            $productDetails = Product::where(['id'=>$userCart->product_id])->first();
+            $userCarts[$key]->image = $productDetails->image;
+        }
+
+        // dd($userCart);
+        // echo "<pre>"; print_r($userCarts); die;
+        return view('products.cart')->with('userCarts', $userCarts);
+
+    }
+
+    public function deleteCartProduct($id = null){
+        Session::forget('CouponAmount');
+        Session::forget('CouponCode');
+
+        $cart = Cart::find($id);
+        $cart->delete();
+        return redirect()->back()->with('flash_message_success', 'The Product is successfully deleted from cart!');
+    }
+
+    public function updateCartQuantity($id = null, $quantity = null ){
+
+        Session::forget('CouponAmount');
+        Session::forget('CouponCode');
+
+        $cart = Cart::where('id', $id)->first();
+        $updated_quantity = $cart->quantity + $quantity;
+        
+
+
+        $getAttributeStock = products_attribute::where(['sku'=>$cart->product_code])->select('stock')->first();
+         
+
+        if($updated_quantity<=$getAttributeStock->stock){
+
+            $cart = Cart::where('id', $id)->increment('quantity', $quantity);
+            return redirect()->back()->with('flash_message_success', 'The Product Quantity is successfully updated!');}else
+            {
+        
+            return redirect()->back()->with('flash_message_error', 'Only '.$getAttributeStock->stock.' of '. $cart->product_code. '  is available');}
+
+    }
+
+    public function applyCoupon(Request $request){
+
+        Session::forget('CouponAmount');
+        Session::forget('CouponCode');
+        
+        $data = $request->all();
+        // echo "<pre>"; print_r($data); die;
+        $couponCount = Coupon::where(['coupon_code'=>$data['coupon_code']])->count();
+
+        if($couponCount == 0){
+            return redirect()->back()->with('flash_message_error', 'Coupon is not valid!');
+
+        }else{
+            $CouponDetails = Coupon::where(['coupon_code'=>$data['coupon_code']])->first();
+
+            //if coupon is active
+            if($CouponDetails->status == 0){
+                return redirect()->back()->with('flash_message_error', 'Coupon is not active!');
+            }
+
+            //if coupon is expired
+
+            $expiry_date = $CouponDetails->expiry_date;
+            $current_date = date('y-m-d');
+            if($expiry_date < $current_date){
+                return redirect()->back()->with('flash_message_error', 'Coupon is expired!'); 
+            }
+
+            //Coupon is Valid for discount
+
+            // get Cart Total Amount
+
+            $session_id = Session::get('session_id');
+            $cartItems = Cart::where(['session_id'=>$session_id])->get();
+            $totalAmount = 0;
+            foreach ($cartItems as $item) {
+              $totalAmount = $totalAmount + $item->quantity * $item->price;
+            }
+
+            // echo $totalAmount;die;
+
+
+            //check if amount is fixed or expired
+
+            if($CouponDetails->amount_type == 'fixed'){
+                $couponAmount = $CouponDetails->amount;
+
+            }else{
+                $couponAmount = $CouponDetails->amount * $totalAmount/100;
+            }
+
+            // echo $couponAmount; die;
+
+            //add coupon code and coupon amount in session 
+            Session::put('CouponAmount', $couponAmount);
+            Session::put('CouponCode', $data['coupon_code']);
+
+            return redirect()->back()->with('flash_message_success', 'Coupon code successfully applied!');
+
+        }
+
     }
 
 
