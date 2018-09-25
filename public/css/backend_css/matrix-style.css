@@ -165,7 +165,7 @@ hr{ border-top-color:#dadada;}
 	margin-right: 10px;
 }
 #sidebar > ul > li.active > a {
-	background: url("../img/menu-active.png") no-repeat scroll right center transparent !important;
+	background: url("/images/backend_images/menu-active.png") no-repeat scroll right center transparent !important;
 	text-decoration:none;
 }
 #sidebar > ul > li > a > .label {
@@ -1407,7 +1407,7 @@ form {
 	font-size:12px;
 }
 #sidebar > ul li a i {
-	background-image: url("../img/glyphicons-halflings-white.png");
+	background-image: url("/images/backend_images/glyphicons-halflings-white.png");
 	margin-top:4px;
 	vertical-align: top;
 }

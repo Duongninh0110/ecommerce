@@ -33,6 +33,37 @@ Route::get('/product/{id}', 'ProductsController@product');
 
 Route::get('/get-product-price', 'ProductsController@getProductPrice');
 
+//register /login
+Route::get('/login-register', 'UsersController@userLoginRegister');
+
+Route::post('/user-register', 'UsersController@register');
+
+//log out 
+Route::get('/user-logout', 'UsersController@logout');
+
+//login route
+
+Route::post('/user-login', 'UsersController@login');
+
+
+//check existance of email
+Route::match(['get', 'post'], '/check-email', 'UsersController@checkEmail');
+
+
+
+Route::group(['middleware' => ['frontlogin']], function(){
+
+	//Acount page
+	Route::match(['get', 'post'], 'account', 'UsersController@account');
+
+	// check current password
+	Route::get('check-user-pwd', 'UsersController@chkUserPassword');
+
+	//update password
+	Route::match(['get','post'], 'update-user-pwd', 'UsersController@updateUserPassword');
+});
+
+
 Route::group(['middleware' => ['auth']], function(){
 
 	Route::get('admin/dashboard', 'AdminController@dashboard');
@@ -74,8 +105,9 @@ Route::group(['middleware' => ['auth']], function(){
 
 	//Banner Routes
 	Route::match(['post', 'get'],'admin/add-banner','BannersController@addBanner');
-
-
+	Route::match(['post', 'get'],'admin/view-banners','BannersController@viewBanners');
+	Route::match(['post', 'get'],'admin/edit-banner/{id}','BannersController@editBanner');
+	Route::get('admin/delete-banner/{id}', 'BannersController@deleteBanner');
 
 });
 

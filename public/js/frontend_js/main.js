@@ -81,32 +81,221 @@ $(document).ready(function(){
 
 
 
-// // Instantiate EasyZoom instances
-// var $easyzoom = $('.easyzoom').easyZoom();
+$(document).ready(function () {
 
-// // Setup thumbnails example
-// var api1 = $easyzoom.filter('.easyzoom--with-thumbnails').data('easyZoom');
+    $("#registerForm").validate({
+        rules: {
+            name: {
+                required: true,
+                minlength: 2,
+                accept: "[a-zA-Z]+"
+            },
+            email: {
+                required: true,
+                email:true,
+                remote: "/check-email" 
+            },
+            password: {
+                required: true,
+                minlength: 6  
+            }
+        },
+        messages: {
+            name: {
+                required: "this field is required",
+                minlength: "Name must have at least 2 letter",
+                accept:"Name must contain letters only"
+            },
+            email: {
+                required: "Email is required",
+                email:"Please enter valid email",
+                remote:"The email already exist"
+            },
+            password: {
+                required: "Enter password",
+                minlength: "Name should be at least 6 characters long" 
+            }
+        },
+        // submitHandler: function (form) { // for demo
+        //     alert('valid form');  // for demo
+        //     return false;  // for demo
+        // }
+    });
 
-// $('.thumbnails').on('click', 'a', function(e) {
-// 	var $this = $(this);
+    //Password Strength script
 
-// 	e.preventDefault();
+    $('#myPassword').passtrength({
+        minChars: 4,
+        passwordToggle: true,
+        tooltip: true,
+        eyeImg:"/images/frontend_images/eye.svg"
+  	});
 
-// 	// Use EasyZoom's `swap` method
-// 	api1.swap($this.data('standard'), $this.attr('href'));
-// });
+  	$("#loginForm").validate({
+        rules: {
+            
+            email: {
+                required: true,
+                email:true
+                 
+            },
+            password: {
+                required: true
+                
+            }
+        },
+        messages: {
+           
+            email: {
+                required: "Email is required",
+                email:"Please enter valid email",
+                remote:"The email already exist"
+            },
+            password: {
+                required: "Please provide your password",
+                
+            }
+        },
+        // submitHandler: function (form) { // for demo
+        //     alert('valid form');  // for demo
+        //     return false;  // for demo
+        // }
+    });
 
-// // Setup toggles example
-// var api2 = $easyzoom.filter('.easyzoom--with-toggle').data('easyZoom');
+    $("#accountForm").validate({
+        rules: {
+            name: {
+                required: true,
+                minlength: 2,
+                accept: "[a-zA-Z]+"
+            },
+            address: {
+                required: true,
+                minlength: 4,
+                 
+            },
+            city: {
+                required: true,
+                minlength: 4,
+            },
+            state: {
+                required: true,
+                minlength: 4, 
+            },
+            country: {
+                required: true,
+                
+            },
+            pincode: {
+                required: true,
+                minlength: 4,
+            },
+            mobile: {
+                required: true,
+                minlength: 4,
+            },
 
-// $('.toggle').on('click', function() {
-// 	var $this = $(this);
+        },
+        messages: {
+            name: {
+                required: "this field is required",
+                minlength: "Name must have at least 2 letter",
+                accept:"Name must contain letters only"
+            },
+            address: {
+                required: "Address is required",
+                minlength: "Name must have at least 4 letter",
+            },
+            city: {
+                required: "City is required",
+                minlength: "Name must have at least 4 letter",
+            },
+            state: {
+                required: "State is required",
+                minlength: "Name must have at least 4 letter",
+            },
+            country: {
+                required: "Country is required",
+                
+            },
+            pincode: {
+                required: "Pincode is required",
+                minlength: "Name must have at least 4 letter",
+            },
+            mobile: {
+                required: "Mobile is required",
+                minlength: "Name must have at least 4 letter",
+            },
+        },
+        // submitHandler: function (form) { // for demo
+        //     alert('valid form');  // for demo
+        //     return false;  // for demo
+        // }
+    });
 
-// 	if ($this.data("active") === true) {
-// 		$this.text("Switch on").data("active", false);
-// 		api2.teardown();
-// 	} else {
-// 		$this.text("Switch off").data("active", true);
-// 		api2._init();
-// 	}
-// });
+    
+
+    $("#current_pwd").keyup (function(){
+
+        var current_pwd = $("#current_pwd").val();
+        $.ajax({
+            headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type:'get',
+            url:'check-user-pwd',
+            data:{current_pwd:current_pwd},
+            success:function(resp){
+                // alert(resp);
+                if(resp=="false"){
+                    $("#chkPwd").html("<font color:'red'> Current Password is Incorrect</font>");
+
+                }else if(resp=="true"){
+                    $("#chkPwd").html("<font color:'green'> Current Password is Correct</font>");
+
+                }
+            }, error:function(){
+                alert("Error");
+            }
+        });
+
+    });
+    $("#passwordForm").validate({
+        rules:{
+            current_pwd:{
+                required: true,
+                minlength:6,
+                maxlength:20
+            },
+
+            new_pwd:{
+                required: true,
+                minlength:6,
+                maxlength:20
+            },
+
+            confirm_pwd:{
+                required:true,
+                minlength:6,
+                maxlength:20,
+                equalTo:"#new_pwd"
+            }
+        },
+        errorClass: "help-inline",
+        errorElement: "span",
+        highlight:function(element, errorClass, validClass) {
+            $(element).parents('.control-group').addClass('error');
+        },
+        unhighlight: function(element, errorClass, validClass) {
+            $(element).parents('.control-group').removeClass('error');
+            $(element).parents('.control-group').addClass('success');
+        }
+    });
+
+
+});
+
+
+
+
+

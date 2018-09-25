@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Product;
 use App\Category;
+use App\Banner;
 
 class IndexController extends Controller
 {
@@ -54,10 +55,13 @@ class IndexController extends Controller
    		
    	// }
 
+   	$banners = Banner::where(['status'=>1])->get();
+
+
    	
 
 
    	// return view ('/index')->with ('products', $products)->with ('categories_menu', $categories_menu);
-   	return view ('/index')->with ('products', $products)->with ('allCategories', $allCategories);
+   	return view ('/index')->with ('products', $products)->with ('allCategories', $allCategories)->with('banners', $banners);
    }
 }
