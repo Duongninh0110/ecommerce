@@ -541,7 +541,10 @@ class ProductsController extends Controller
 
 
 
-        // dd($data['size']);
+        
+        if(empty($data['size'])){
+            return redirect()->back()->with('flash_message_success', 'please choose product size!');
+        }
 
         $size = explode("-", $data['size']);
 
