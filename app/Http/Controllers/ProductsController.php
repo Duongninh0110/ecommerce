@@ -690,5 +690,30 @@ class ProductsController extends Controller
 
     }
 
+    public function checkout(){
+
+        
+        $session_id = Session('session_id');
+        // dd($session_id);
+        $userCarts = Cart::where(['session_id'=>$session_id])->get();
+
+        $userCarts = json_decode(json_encode($userCarts));
+
+
+
+        foreach ($userCarts as $key=>$userCart){
+
+            // $userCarts[$key]->image='';
+
+            $productDetails = Product::where(['id'=>$userCart->product_id])->first();
+            $userCarts[$key]->image = $productDetails->image;
+        }
+
+        // dd($userCart);
+        // echo "<pre>"; print_r($userCarts); die;
+        return view('products.cart')->with('userCarts', $userCarts);
+
+    }
+
 
 }

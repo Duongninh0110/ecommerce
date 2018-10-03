@@ -119,3 +119,4 @@ Route::match(['post', 'get'], 'cart', 'ProductsController@cart');
 Route::get('/cart/delete-product/{id}', 'ProductsController@deleteCartProduct');
 Route::get('/cart/update-quantity/{id}/{quantity}', 'ProductsController@updateCartQuantity');
 Route::post('cart/apply-coupon', 'ProductsController@applyCoupon');
+Route::match(['post', 'get'], 'checkout', 'ProductsController@checkout');
