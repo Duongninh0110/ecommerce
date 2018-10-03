@@ -252,7 +252,7 @@ $(document).ready(function(){
 
 		var id = $(this).attr('rel');
 		var deleteFunction = $(this).attr('rel1');
-
+		alert(deleteFunction);
 
 		swal({
 		  title: 'Are you sure?',
