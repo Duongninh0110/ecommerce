@@ -15,6 +15,9 @@ use App\products_attribute;
 use App\products_image;
 use App\Cart;
 use App\Coupon;
+use App\User;
+use App\Country;
+
 class ProductsController extends Controller
 {
     public function addProduct(Request $request){
@@ -709,9 +712,15 @@ class ProductsController extends Controller
             $userCarts[$key]->image = $productDetails->image;
         }
 
+
+        $user_id = Auth::user()->id;
+        $userDetails = User::find($user_id);
+
+        $countries = Country::get();
+
         // dd($userCart);
         // echo "<pre>"; print_r($userCarts); die;
-        return view('products.cart')->with('userCarts', $userCarts);
+        return view('products.checkout')->with('userCarts', $userCarts)->with("userDetails", $userDetails)->with("countries", $countries);
 
     }
 

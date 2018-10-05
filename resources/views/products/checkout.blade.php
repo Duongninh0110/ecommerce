@@ -2,33 +2,63 @@
 @section ('content')
 
 <section id="cart_items">
-		<div class="container">
-			<div class="breadcrumbs">
-				<ol class="breadcrumb">
-				  <li><a href="#">Home</a></li>
-				  <li class="active">Shopping Cart</li>
+	<div class="container">
+		<div class="breadcrumbs">
+			<ol class="breadcrumb">
+			  <li><a href="#">Home</a></li>
+			  <li class="active">Check out</li>
+			</ol>
+		</div><!--/breadcrums-->
 
-				  	@if (session('flash_message_error'))
+		<div class="review-payment">
+			<h1>Buyer Information</h1>
+		</div>
 
-			        <div class="alert alert-danger alert-block">
-			            <button type="button" class="close" data-dismiss="alert">×</button> 
-			            <strong>{!!session('flash_message_error')!!}</strong>
-			        </div>
+		<div class="shopper-informations">
+			<div class="row">				
+				<div class="col-sm-4 col-sm-offset-1">
+					<div class="login-form"><!--login form-->
+						<h2>Billing To</h2>
+						<form id="accountForm" name="accountForm" action="{{url('checkout')}}" method="post">
+							@csrf
+							
+							<input value="{{$userDetails->name}}" name="name" id="name" type="text" placeholder="Name" />
+							<input value="{{$userDetails->address}}" name="address" id="address" type="text" placeholder="Address" />
+							<input value="{{$userDetails->city}}" name="city" id="city" type="text" placeholder="City" />
+							<input value="{{$userDetails->state}}" name="state" id="state" type="text" placeholder="State" />
 
-			           
-			    	@endif  
+							
+							<select name="country" id="country">
+								<option value="">Select Country</option>
+								@foreach($countries as $country)
+								<option value="{{$country->country_name}}" @if($country->country_name == $userDetails->country) selected @endif>{{$country->country_name}}</option>
+								@endforeach
+							</select>
+							<input style="margin-top: 10px" value="{{$userDetails->pincode}}" name="pincode" id="pincode" type="text" placeholder="Pincode" />
+							<input value="{{$userDetails->mobile}}" name="mobile" id="mobile" type="text" placeholder="Mobile" />
+							<button type="submit" class="btn btn-default">Checkout</button>
+							
 
-					@if (session('flash_message_success'))
-
-				      <div class="alert alert-success alert-block">
-				          <button type="button" class="close" data-dismiss="alert">×</button> 
-				          <strong>{!!session('flash_message_success')!!}</strong>
-				      </div>
-				    @endif 
-
-				</ol>
+							
+						</form>
+					</div>
+				</div>
+				<div class="col-sm-1">
+					<h2 class=""></h2>
+				</div>
+				<div class="col-sm-4">
+					<div class="signup-form">
+						{{-- <h2>Shipping To</h2> --}}
+						
+					</div>
+				</div>					
 			</div>
-			<div class="table-responsive cart_info">
+		</div>
+		<div class="review-payment">
+			<h1>Review & Payment</h1>
+		</div>
+
+		<div class="table-responsive cart_info">
 				<table class="table table-condensed">
 					<thead>
 						<tr class="cart_menu">
@@ -75,36 +105,14 @@
 						</tr>
 
 						<?php $total_amount = $total_amount + $userCart->quantity*$userCart->price?>
-
+						
 						@endforeach						
 					</tbody>
 				</table>
 			</div>
-		</div>
-	</section> <!--/#cart_items-->
-
-	<section id="do_action">
-		<div class="container">
-			<div class="heading">
-				<h3>What would you like to do next?</h3>
-				<p>Choose if you have a coupon code to use.</p>
-			</div>
 			<div class="row">
 				<div class="col-sm-6">
-					<div class="chose_area">
-						<ul class="user_option">
-							<li>
-								
-								<label>Coupon Code</label>
-								<form action="{{url('cart/apply-coupon/')}}" method="post">
-								@csrf
-								<input type="text" name="coupon_code">
-								<input type="submit" class="btn btn-default" value="Apply">
-								</form>
-							</li>
-						</ul>						
-						
-					</div>
+					
 				</div>
 				<div class="col-sm-6">
 					<div class="total_area">
@@ -117,13 +125,24 @@
 							<li>Total <span>${{$total_amount}}</span></li>
 							@endif
 						</ul>
-							<a class="btn btn-default update" href="">Update</a>
-							<a class="btn btn-default check_out" href="">Check Out</a>
+							{{-- <a class="btn btn-default update" href="">Update</a>
+							<a class="btn btn-default check_out" href="checkout">Check Out</a> --}}
 					</div>
 				</div>
 			</div>
-		</div>
-	</section><!--/#do_action-->
 
+		<div class="payment-options">
+				<span>
+					<label><input type="checkbox"> Direct Bank Transfer</label>
+				</span>
+				<span>
+					<label><input type="checkbox"> Check Payment</label>
+				</span>
+				<span>
+					<label><input type="checkbox"> Paypal</label>
+				</span>
+			</div>
+	</div>
+</section> <!--/#cart_items-->
 
 @endsection
